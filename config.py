@@ -1,20 +1,26 @@
 # config.py
+# Velrixo Casino Bot V2 - configuration
+# Keep secrets (BOT_TOKEN) in environment variables (Railway/Local .env), NOT in this file.
+
 import os
 
-# Use env var BOT_TOKEN (recommended). If you temporarily want to embed, you can set it here,
-# but DO NOT commit a real token to a public repo.
+# Bot token from @BotFather (set as env var in Railway: BOT_TOKEN)
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-# Owner bot username (without @). Owner will be auto-added as admin when they /start
+# Owner username (without @) - the owner will be auto-added as admin on first /start
 OWNER_USERNAME = os.getenv("OWNER_USERNAME", "Velrixo").lstrip("@")
 
-# Sqlite DB filename
+# Database filename (SQLite)
 DB_FILE = os.getenv("DB_FILE", "velrixo_casino_v2.sqlite")
 
-# Currency label
-CURRENCY = os.getenv("CURRENCY", "$ Chips")
+# Virtual currency label
+CURRENCY_LABEL = os.getenv("CURRENCY_LABEL", "Chips")
 
-# Default referral bonus / small promo amounts
-REF_BONUS_DEFAULT = int(os.getenv("REF_BONUS_DEFAULT", "500"))
-DAILY_MIN = int(os.getenv("DAILY_MIN", "200"))
-DAILY_MAX = int(os.getenv("DAILY_MAX", "500"))
+# Default amounts (can change)
+START_BALANCE = int(os.getenv("START_BALANCE", "1000"))
+DAILY_MIN = int(os.getenv("DAILY_MIN", "400"))
+DAILY_MAX = int(os.getenv("DAILY_MAX", "600"))
+REFERRAL_BONUS = int(os.getenv("REFERRAL_BONUS", "200"))
+
+# Misc
+MAX_BET_PERCENT = float(os.getenv("MAX_BET_PERCENT", "0.10"))  # max bet = 10% of balance
