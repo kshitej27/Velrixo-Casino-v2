@@ -1,0 +1,38 @@
+# bot/games/dice.py
+from pyrogram import Client, filters
+from bot.db import get_balance, update_balance
+import asyncio
+
+@Client.on_message(filters.command("dice"))
+async def dice_handler(client, message):
+    user_id = message.from_user.id
+    args = message.text.split()
+
+    bet = 50
+    if len(args) > 1 and args[1].isdigit():
+        bet = int(args[1])
+
+    balance = get_balance(user_id)
+    if balance < bet:
+        return await message.reply(f"❌ Not enough coins! You need at least {bet} coins.")
+
+    # deduct bet instantly
+    update_balance(user_id, -bet)
+
+    msg = await message.reply("🎲 Rolling the dice...")
+    await asyncio.sleep(1)
+
+    dice_msg = await client.send_dice(message.chat.id, emoji="🎲")
+    dice_value = dice_msg.dice.value  # 1-6 result
+
+    await asyncio.sleep(3)
+
+    if dice_value >= 4:  # win if 4, 5, 6
+        win = bet * 2
+        update_balance(user_id, win)
+        await message.reply(f"🎯 Rolled **{dice_value}**\n✅ You Win +{win} coins!")
+    else:
+        await message.reply(f"🎯 Rolled **{dice_value}**\n😢 You lost {bet} coins.")
+
+    bal = get_balance(user_id)
+    await message.reply(f"💰 Current Balance: `{bal}` coins")
